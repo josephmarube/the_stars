@@ -11,4 +11,4 @@ Design and develop an enterprise-level fullstack application where we process Mo
     3. Davine Uwase
 
 ## System Architecture
-    [https://drive.google.com/file/d/1NggQeYrwl7KZc4BFyFpBZf0qz91oGh7r/view]
+ [https://drive.google.com/file/d/1NggQeYrwl7KZc4BFyFpBZf0qz91oGh7r]

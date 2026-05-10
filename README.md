@@ -16,6 +16,9 @@ Design and develop an enterprise-level fullstack application where we process Mo
 ## System Architecture
  [https://drive.google.com/file/d/1NggQeYrwl7KZc4BFyFpBZf0qz91oGh7r]
 
+## System Architecture Diagram
+https://github.com/josephmarube/the_stars/blob/main/system_architecture.png 
+
  ## Objectives
 
 - Parse MoMo XML SMS data

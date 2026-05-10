@@ -37,7 +37,7 @@ Design and develop an enterprise-level fullstack application where we process Mo
 
 ## Scrum Board
 
-[Trello Board Link](https://trello.com/...) (I'm working on it)
+https://trello.com/b/fxmhWKpf/momo-xml-analytics 
 
 ## Setup Instructions
 

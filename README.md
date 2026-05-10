@@ -1,5 +1,5 @@
 ## TEAM NAME : The Stars
-# The Stars - MoMo XML Analytics Dashboard
+# MoMo XML Analytics Dashboard
 
 An enterprise-level fullstack application for processing, cleaning, categorizing, and visualizing MoMo SMS XML transaction data.
 

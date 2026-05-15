@@ -129,4 +129,8 @@ CREATE INDEX idx_tp_transaction
 ON transaction_participants(transaction_id);
 
 CREATE INDEX idx_tp_user
+<<<<<<< HEAD
 ON transaction_participants(user_id);
+=======
+ON transaction_participants(user_id);
+>>>>>>> cf4defbf1bcadc9bec931541bcc7f1816b7a8e61

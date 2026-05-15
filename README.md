@@ -1,4 +1,7 @@
 ## TEAM NAME : The Stars
+# MoMo XML Analytics Dashboard
+
+An enterprise-level fullstack application for processing, cleaning, categorizing, and visualizing MoMo SMS XML transaction data.
 
 ## PROJECT DESCRIPTION:
 
@@ -12,6 +15,9 @@ Design and develop an enterprise-level fullstack application where we process Mo
 
 ## System Architecture
  [https://drive.google.com/file/d/1NggQeYrwl7KZc4BFyFpBZf0qz91oGh7r]
+
+## System Architecture Diagram
+https://github.com/josephmarube/the_stars/blob/main/system_architecture.png 
 
  ## Objectives
 
@@ -34,7 +40,7 @@ Design and develop an enterprise-level fullstack application where we process Mo
 
 ## Scrum Board
 
-[Trello Board Link](https://trello.com/...) (I'm working on it)
+https://trello.com/b/fxmhWKpf/momo-xml-analytics 
 
 ## Setup Instructions
 

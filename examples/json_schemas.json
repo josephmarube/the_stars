@@ -1,0 +1,38 @@
+{
+  "transaction_category": {
+    "category_id": 1,
+    "name": "Send Money",
+    "description": "Peer-to-peer RWF transfer",
+    "created_at": "2024-05-11T00:00:00Z"
+  },
+  "user": {
+    "user_id": 8,
+    "phone_number": "+250736521838",
+    "full_name": "Abebe Chala Chebudie",
+    "is_merchant": false,
+    "created_at": "2024-05-11T00:00:00Z"
+  },
+  "transaction": {
+    "transaction_id": 13,
+    "ref_code": "TXN-165-20240511-1",
+    "amount": 10000.00,
+    "fee": 100.00,
+    "sender_id": 8,
+    "category_id": 1,
+    "status": "completed",
+    "transaction_at": "2024-05-11T20:34:47Z"
+  },
+  "transaction_participant": {
+    "participant_id": 1,
+    "transaction_id": 13,
+    "user_id": 1,
+    "role": "receiver"
+  },
+  "system_log": {
+    "log_id": 7,
+    "transaction_id": 13,
+    "event_type": "parse_success",
+    "message": "*165*S* format SMS parsed: 10000 RWF to Samuel Carter",
+    "logged_at": "2024-05-11T20:34:47Z"
+  }
+}

@@ -1,4 +1,59 @@
-{
+{"complex_transaction": {
+    "transaction_id": 13,
+    "ref_code": "TXN-165-20240511-1",
+    "amount": 10000.00,
+    "fee": 100.00,
+    "status": "completed",
+    "transaction_at": "2024-05-11T20:34:47Z",
+
+    "category": {
+      "category_id": 1,
+      "name": "Send Money",
+      "description": "Peer-to-peer RWF transfer"
+    },
+     "sender": {
+      "user_id": 8,
+      "full_name": "Abebe Chala Chebudie",
+      "phone_number": "+250736521838",
+      "is_merchant": false
+    },
+
+    "participants": [
+      {
+        "participant_id": 1,
+        "role": "sender",
+        "user": {
+          "user_id": 8,
+          "full_name": "Abebe Chala Chebudie",
+          "phone_number": "+250736521838"
+        }
+      },
+      {
+        "participant_id": 13,
+        "role": "receiver",
+        "user": {
+          "user_id": 1,
+          "full_name": "Samuel Carter",
+          "phone_number": "+250791666666"
+        }
+      }
+    ],
+
+    "system_logs": [
+      {
+        "log_id": 7,
+        "event_type": "parse_success",
+        "message": "*165*S* format SMS parsed: 10000 RWF to Samuel Carter",
+        "logged_at": "2024-05-11T20:34:47Z"
+      },
+      {
+        "log_id": 8,
+        "event_type": "load_success",
+        "message": "Record inserted into transactions table successfully",
+        "logged_at": "2024-05-11T20:34:48Z"
+      }
+    ]
+  },
   "transaction_category": {
     "category_id": 1,
     "name": "Send Money",

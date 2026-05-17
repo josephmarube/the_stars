@@ -133,143 +133,85 @@ ON transaction_participants(user_id);
 
 
 
-
-
-
+-- -----------------------------------------------------------------------------
+-- 1. transaction_categories
+-- Each maps to a real MTN MoMo transaction type observed in production SMS
+-- -----------------------------------------------------------------------------
 INSERT INTO transaction_categories (name, description) VALUES
-('Send Money',   'Peer-to-peer RWF transfer'),
-('Payment',      'Merchant or person payment confirmed via TxId in SMS body'),
-('Airtime',      'Mobile airtime top-up'),
-('Bank Deposit', 'Cash deposit into MoMo wallet'),
-('Receive Money','Incoming transfer from another user');
+('Incoming Money',     'Money received from another MoMo user into the wallet'),
+('Payment to Code',    'Payment made to a merchant or business via merchant code'),
+('Transfer to Mobile', 'Peer to peer RWF transfer sent to another mobile number'),
+('Bank Deposit',       'Cash deposited into MoMo wallet from a bank or agent'),
+('Airtime Purchase',   'Mobile airtime top-up purchased for self or third party'),
+('Agent Withdrawal',   'Cash withdrawn from MoMo wallet at a registered agent');
 
 
+-- -----------------------------------------------------------------------------
+-- 2. users
+-- users covering all real MoMo network participant types: customers, merchants, and agents 
+-- -----------------------------------------------------------------------------
 INSERT INTO users (phone_number, full_name, is_merchant) VALUES
-('+250791666666', 'Samuel Carter',  0),
-('+250790777777', 'Agent Sophia',  1), 
-('+250788999999', 'Robert Brown',   0), 
-('+250789888888', 'Linda Green',    0), 
-('+250795963036', 'MoMo Agent',     1),  
-('+250781000001', 'Alex Doe',       0), 
-('+250781000002', 'Jane Smith',     0),
-('+250736521838', 'Abebe Chala Chebudie', 0);  
+('+250780000001', 'Alice Mukamana',     0),
+('+250780000002', 'Bob Nkurunziza',     0),
+('+250780000003', 'Grace Uwimana',      0),
+('+250780000004', 'Jean Paul Habimana', 0),
+('+250780000005', 'Kigali MoMo Agent',  1),
+('+250780000006', 'SuperMart Kigali',   1),
+('+250780000007', 'Rwanda Water WASAC', 1);
 
+
+-- -----------------------------------------------------------------------------
+-- 3. transactions
+-- ref codes are 10-character alphanumeric system-generated identifiers
+-- sender_id NULL on bank deposit: SMS format carries no human sender field
+-- failed transaction reflects real insufficient balance scenario
+-- -----------------------------------------------------------------------------
 INSERT INTO transactions (ref_code, amount, fee, sender_id, category_id, status, transaction_at) VALUES
--- Payments (TxId format from XML)
-('TXN-17818959211',  2000.00,    0.00, 8, 2, 'completed', '2024-05-11 18:48:42'),
-('TXN-45434420466', 10900.00,    0.00, 8, 2, 'completed', '2024-05-12 13:26:13'),
-('TXN-82113964658',  3500.00,    0.00, 8, 2, 'completed', '2024-05-12 13:34:25'),
-('TXN-26614842768',  1000.00,    0.00, 8, 2, 'completed', '2024-05-12 17:58:15'),
-('TXN-70497610538',  5000.00,    0.00, 8, 2, 'completed', '2024-05-12 18:08:58'),
-('TXN-16913786322',  2150.00,    0.00, 8, 2, 'completed', '2024-05-16 21:35:36'),
-('TXN-30173936259',  1500.00,    0.00, 8, 2, 'completed', '2024-05-18 08:15:31'),
-('TXN-38084447123',  6000.00,    0.00, 8, 2, 'completed', '2024-05-18 08:48:28'),
-('TXN-61189493387',  3500.00,    0.00, 8, 2, 'completed', '2024-05-22 13:44:59'),
-('TXN-37467134419',  1800.00,    0.00, 8, 2, 'completed', '2024-05-23 09:51:43'),
-('TXN-12131092250',  1000.00,    0.00, 8, 2, 'completed', '2024-05-24 13:10:41'),
-('TXN-35617026753',  1500.00,    0.00, 8, 2, 'completed', '2024-05-24 16:41:03'),
--- Send Money transfers (*165*S* format from XML)
-('TXN-165-20240511-1', 10000.00, 100.00, 8, 1, 'completed', '2024-05-11 20:34:47'),
-('TXN-165-20240512-1',  1000.00,  20.00, 8, 1, 'completed', '2024-05-12 03:47:33'),
-('TXN-165-20240512-2',  1700.00, 100.00, 8, 1, 'completed', '2024-05-12 19:23:50'),
-('TXN-165-20240512-3',  2000.00, 100.00, 8, 1, 'completed', '2024-05-12 20:49:30'),
-('TXN-165-20240514-1',  1800.00, 100.00, 8, 1, 'completed', '2024-05-14 09:11:32'),
-('TXN-165-20240514-2',  2500.00, 100.00, 8, 1, 'completed', '2024-05-14 09:27:40'),
-('TXN-165-20240514-3',   500.00,  20.00, 8, 1, 'completed', '2024-05-14 14:01:57'),
-('TXN-165-20240514-4',  1800.00, 100.00, 8, 1, 'completed', '2024-05-14 19:21:16'),
--- Airtime (*162* format from XML)
-('TXN-13913173274',  2000.00,    0.00, 8, 3, 'completed', '2024-05-12 11:41:28'),
--- Receive Money (incoming transfer)
-('TXN-45738348638',  1400.00,    0.00, 4, 5, 'completed', '2024-05-19 01:49:09'),
--- Bank Deposits (*113*R* format from XML)
-('TXN-DEP-20240514-1', 5000.00,  0.00, NULL, 4, 'completed', '2024-05-14 09:10:29'),
-('TXN-DEP-20240514-2', 5000.00,  0.00, NULL, 4, 'completed', '2024-05-14 19:06:03'),
-('TXN-DEP-20240518-1', 5000.00,  0.00, NULL, 4, 'completed', '2024-05-18 08:11:36'),
-('TXN-DEP-20240518-2', 5000.00,  0.00, NULL, 4, 'completed', '2024-05-18 08:48:00'),
-('TXN-DEP-20240521-1', 5000.00,  0.00, NULL, 4, 'completed', '2024-05-21 18:15:06'),
-('TXN-DEP-20240524-1', 5000.00,  0.00, NULL, 4, 'completed', '2024-05-24 11:43:17');
+('B7K3X9P2QA', 25000.00,   0.00, 2,    1, 'completed', '2024-05-01 08:14:22'),
+('M1R8T4W6NZ',  5000.00,   0.00, 1,    2, 'completed', '2024-05-02 10:01:45'),
+('H5C2L9F7YD', 10000.00, 100.00, 1,    3, 'completed', '2024-05-03 17:30:10'),
+('Q4V6J1K8XR', 20000.00,   0.00, NULL, 4, 'completed', '2024-05-04 09:00:00'),
+('N3G7W2B5TM',  1000.00,   0.00, 1,    5, 'completed', '2024-05-04 11:45:33'),
+('Z9P1Y4C8HQ', 15000.00, 200.00, 1,    6, 'completed', '2024-05-05 12:22:08'),
+('D6F3R7V2KL',  8000.00, 100.00, 1,    3, 'failed',    '2024-05-05 14:10:55');
 
+
+-- -----------------------------------------------------------------------------
+-- 4. transaction_participants
+-- bank deposit (Q4V6J1K8XR) has receiver only — no human sender in SMS format
+-- airtime (N3G7W2B5TM) has sender only — recipient is MTN system, not a user
+-- failed transaction (D6F3R7V2KL) still records both participants
+-- -----------------------------------------------------------------------------
 INSERT INTO transaction_participants (transaction_id, user_id, role) VALUES
--- Payments: receivers
-(1,  1, 'receiver'),
-(2,  7, 'receiver'),
-(3,  6, 'receiver'),
-(4,  3, 'receiver'),
-(5,  4, 'receiver'),
-(6,  4, 'receiver'),
-(7,  3, 'receiver'),
-(8,  7, 'receiver'),
-(9,  3, 'receiver'),
-(10, 3, 'receiver'),
-(11, 1, 'receiver'),
-(12, 6, 'receiver'),
--- Send Money: receivers
-(13, 1, 'receiver'),
-(14, 2, 'receiver'),
-(15, 3, 'receiver'),
-(16, 6, 'receiver'),
-(17, 3, 'receiver'),
-(18, 7, 'receiver'),
-(19, 2, 'receiver'),
-(20, 6, 'receiver'),
--- Airtime: receiver
-(21, 5, 'receiver'),
--- Receive Money: Abebe received
-(22, 8, 'receiver'),
--- Bank Deposits: Abebe received
-(23, 8, 'receiver'),
-(24, 8, 'receiver'),
-(25, 8, 'receiver'),
-(26, 8, 'receiver'),
-(27, 8, 'receiver'),
-(28, 8, 'receiver'),
--- Abebe is sender on all outgoing transactions
-(1,  8, 'sender'),
-(2,  8, 'sender'),
-(3,  8, 'sender'),
-(4,  8, 'sender'),
-(5,  8, 'sender'),
-(6,  8, 'sender'),
-(7,  8, 'sender'),
-(8,  8, 'sender'),
-(9,  8, 'sender'),
-(10, 8, 'sender'),
-(11, 8, 'sender'),
-(12, 8, 'sender'),
-(13, 8, 'sender'),
-(14, 8, 'sender'),
-(15, 8, 'sender'),
-(16, 8, 'sender'),
-(17, 8, 'sender'),
-(18, 8, 'sender'),
-(19, 8, 'sender'),
-(20, 8, 'sender'),
-(21, 8, 'sender'),
-(23, 8, 'sender'),
-(24, 8, 'sender'),
-(25, 8, 'sender'),
-(26, 8, 'sender'),
-(27, 8, 'sender'),
-(28, 8, 'sender'),
--- Linda Green is sender on Receive Money transaction
-(22, 4, 'sender');
+(1, 2, 'sender'),
+(1, 1, 'receiver'),
+(2, 1, 'sender'),
+(2, 6, 'receiver'),
+(3, 1, 'sender'),
+(3, 3, 'receiver'),
+(4, 1, 'receiver'),
+(5, 1, 'sender'),
+(6, 1, 'sender'),
+(6, 5, 'receiver'),
+(7, 1, 'sender'),
+(7, 4, 'receiver');
 
+
+-- -----------------------------------------------------------------------------
+-- 5. system_logs
+-- log format: ref | category | amount | sender -> receiver
+-- reflects real pipeline behaviour: parse, load, error, duplicate detection
+-- NULL transaction_id on parse_error and duplicate: no transaction was created
+-- -----------------------------------------------------------------------------
 INSERT INTO system_logs (transaction_id, event_type, message) VALUES
-(1,  'parse_success', 'TxId format SMS parsed: TXN-17818959211, amount=2000, fee=0'),
-(1,  'load_success',  'Record inserted into transactions table successfully'),
-(2,  'parse_success', 'TxId format SMS parsed: TXN-45434420466, amount=10900, fee=0'),
-(3,  'parse_success', 'TxId format SMS parsed: TXN-82113964658, amount=3500, fee=0'),
-(4,  'parse_success', 'TxId format SMS parsed: TXN-26614842768, amount=1000, fee=0'),
-(5,  'parse_success', 'TxId format SMS parsed: TXN-70497610538, amount=5000, fee=0'),
-(13, 'parse_success', '*165*S* format SMS parsed: 10000 RWF to Samuel Carter (+250791666666)'),
-(13, 'load_success',  'Record inserted into transactions table successfully'),
-(14, 'parse_success', '*165*S* format SMS parsed: 1000 RWF to Samuel Carter (+250790777777)'),
-(21, 'parse_success', '*162* airtime SMS parsed: TXN-13913173274, amount=2000'),
-(22, 'parse_success', 'Receive Money SMS parsed: TXN-45738348638, 1400 RWF from Linda Green'),
-(23, 'parse_success', '*113*R* bank deposit SMS parsed: 5000 RWF deposited'),
-(23, 'load_success',  'Bank deposit record inserted successfully'),
-(24, 'parse_success', '*113*R* bank deposit SMS parsed: 5000 RWF deposited'),
-(NULL, 'parse_error', 'SMS body format unrecognised - skipped during ETL batch run'),
-(NULL, 'duplicate',   'Duplicate ref_code detected during load - record skipped');
-
-
+(1,    'parse_success', 'B7K3X9P2QA | incoming_money | 25000 RWF | +250780000002 -> +250780000001'),
+(1,    'load_success',  'B7K3X9P2QA committed to transactions [row_id=1]'),
+(2,    'parse_success', 'M1R8T4W6NZ | payment_to_code | 5000 RWF | +250780000001 -> +250780000006'),
+(3,    'parse_success', 'H5C2L9F7YD | transfer_to_mobile | 10000 RWF + 100 fee | +250780000001 -> +250780000003'),
+(4,    'parse_success', 'Q4V6J1K8XR | bank_deposit | 20000 RWF | system -> +250780000001'),
+(4,    'load_success',  'Q4V6J1K8XR committed to transactions [row_id=4]'),
+(5,    'parse_success', 'N3G7W2B5TM | airtime | 1000 RWF | +250780000001 -> MTN'),
+(7,    'parse_success', 'D6F3R7V2KL | transfer_to_mobile | 8000 RWF + 100 fee | +250780000001 -> +250780000004'),
+(7,    'load_error',    'D6F3R7V2KL status=failed | balance 5600 RWF insufficient for 8100 RWF debit'),
+(NULL, 'parse_error',   'offset 4821 | regex match failed | body="*161*..." unrecognised pattern'),
+(NULL, 'duplicate',     'H5C2L9F7YD rejected | ref already exists in transactions [row_id=3]');

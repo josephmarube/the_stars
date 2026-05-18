@@ -46,14 +46,14 @@ mysql -u root -p < database/database_setup.sql
 - Parse MoMo XML SMS data
 - Clean and normalize transaction records
 - Categorize transactions automatically
-- Store processed data in SQLite
+- Store processed data in MYSQL
 - Export analytics-ready JSON
 - Visualize data on a dashboard
 
  ## Technologies Used
 
 - Python
-- SQLite
+- MYSQL
 - HTML
 - CSS
 - JavaScript

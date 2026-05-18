@@ -93,14 +93,15 @@
       }
     ],
 
-    "system_logs": [
-      {
-        "log_id": 8,
-        "event_type": "parse_success",
-        "message": "Z9P1Y4C8HQ | agent_withdrawal | 15000 RWF + 200 fee | +250780000001 -> +250780000005",
-        "logged_at": "2024-05-05T12:22:08Z"
-      }
-    ]
+"system_logs": [
+  {
+    "log_id": 12,
+    "event_type": "parse_success",
+    "message": "Z9P1Y4C8HQ | agent_withdrawal | 15000 RWF + 200 fee | +250780000001 -> +250780000005",
+    "logged_at": "2024-05-05T12:22:08Z"
+  }
+]
+
   },
 
   "complex_transaction_failed": {

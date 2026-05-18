@@ -1,38 +1,38 @@
 # SQL to JSON Mapping
 
-## How each SQL table maps to JSON
+This document explains how the data from our MySQL database becomes JSON when the API sends it to the frontend.
 
-Each table in the database becomes one JSON object when the API sends data back.
+## Tables and their JSON keys
 
-| SQL Table                  | JSON key                  | Notes                                       |
-|----------------------------|---------------------------|---------------------------------------------|
-| transaction_categories     | "transaction_category"    | All columns shown as key-value pairs        |
-| users                      | "user"                    | is_merchant: TINYINT(1) becomes true/false  |
-| transactions               | "transaction"             | sender_id FK kept as a number               |
-| transaction_participants   | "transaction_participant" | role is either sender or receiver           |
-| system_logs                | "system_log"              | logged_at stored as a date-time string      |
+Each table in the database gets its own JSON object. Here is the list:
 
-## How the complex transaction object is built
+- The transaction_categories table becomes "transaction_category" in JSON
+- The users table becomes "user"
+- The transactions table becomes "transaction"
+- The transaction_participants table becomes "transaction_participant"
+- The system_logs table becomes "system_log"
 
-The complex_transaction object joins data from several tables.
-This is what an API would return when a frontend asks for full transaction details.
+The columns in each table become the keys inside that JSON object.
 
-Step 1 — Get the transaction, its category, and the sender:
+## How we build the complex transaction JSON
+
+For the complex transaction object, one query is not enough because we need data from many tables. So we run three queries and the program puts the results together.
+
+The first query gets the transaction itself plus the category and the sender. We use LEFT JOIN because the sender can be NULL for bank deposits:
 
 ```sql
 SELECT
   t.transaction_id, t.ref_code, t.amount, t.fee,
   t.status, t.transaction_at,
   c.name AS category_name,
-  u.full_name AS sender_name,
-  u.phone_number AS sender_phone
+  u.full_name AS sender_name
 FROM transactions t
 LEFT JOIN transaction_categories c ON t.category_id = c.category_id
 LEFT JOIN users u ON t.sender_id = u.user_id
 WHERE t.transaction_id = 3;
 ```
 
-Step 2 — Get the participants (sender and receiver) for that transaction:
+After that we get the participants. This is what fills the participants array in the JSON:
 
 ```sql
 SELECT tp.participant_id, tp.role,
@@ -42,7 +42,7 @@ JOIN users u ON tp.user_id = u.user_id
 WHERE tp.transaction_id = 3;
 ```
 
-Step 3 — Get the log entries for that transaction:
+And finally we get the logs for the same transaction:
 
 ```sql
 SELECT log_id, event_type, message, logged_at
@@ -50,48 +50,52 @@ FROM system_logs
 WHERE transaction_id = 3;
 ```
 
-The results of these three queries are combined in code to produce the nested JSON object.
+The program code takes the rows from all three queries and builds them into one nested JSON object.
 
-## Data type changes from SQL to JSON
+## How SQL data types change in JSON
 
-| SQL type        | JSON type | Example                       |
-|-----------------|-----------|-------------------------------|
-| INT             | number    | 3                             |
-| DECIMAL(15,2)   | number    | 10000.00                      |
-| VARCHAR         | string    | "completed"                   |
-| DATETIME        | string    | "2024-05-03T17:30:10Z"        |
-| TINYINT(1)      | boolean   | false                         |
-| NULL            | null      | null                          |
+SQL types and JSON types are not the same. This is how we convert them:
 
-## Transaction categories in the database
+- INT stays as a number, for example 3
+- DECIMAL(15,2) also stays as a number, for example 10000.00
+- VARCHAR becomes a string in quotes, for example "completed"
+- DATETIME becomes a string with the date and time, for example "2024-05-03T17:30:10Z"
+- TINYINT(1) becomes true or false in JSON
+- NULL in SQL becomes null in JSON (without quotes)
 
-The database has 6 categories. Each one matches a type of SMS found in the XML file.
+## The 6 categories in the database
 
-| category_id | name               | SMS pattern in XML                      | Count in XML |
-|-------------|--------------------|-----------------------------------------|--------------|
-| 1           | Incoming Money     | You have received X RWF from NAME...    | 63           |
-| 2           | Payment to Code    | TxId: XXXXX. Your payment of X RWF...  | 660          |
-| 3           | Transfer to Mobile | *165*S*X RWF transferred to NAME...    | 585          |
-| 4           | Bank Deposit       | *113*R*A bank deposit of X RWF...      | 248          |
-| 5           | Airtime Purchase   | *162*TxId:XXXXX*S*Your payment...      | 53           |
-| 6           | Agent Withdrawal   | You NAME... withdrawn X RWF via agent..| 3            |
+We have 6 categories in the SQL. They come from looking at the XML file from the assignment. The XML had 1691 SMS messages and we counted how many were of each type:
 
-Note: 36 merchant debit messages (*164*S*) and 8 one-time password messages
-were also found in the XML. The password messages are skipped — the program
-writes a log entry with event_type = parse_error and no transaction is saved.
-The 36 merchant messages could be added as a 7th category in a later update.
+| Category ID | Name | Count in XML |
+|---|---|---|
+| 1 | Incoming Money | 63 |
+| 2 | Payment to Code | 660 |
+| 3 | Transfer to Mobile | 585 |
+| 4 | Bank Deposit | 248 |
+| 5 | Airtime Purchase | 53 |
+| 6 | Agent Withdrawal | 3 |
 
-## Why some log entries have transaction_id = NULL
+The XML also had 36 merchant payment messages and 8 OTP messages, but those are not stored in their own categories yet.
 
-Some SMS messages cannot be turned into a transaction record. For example,
-a one-time password message like "Dear Customer, your password is 2476" has
-no amount, no sender phone number, and no receiver. The program skips it.
+## When transaction_id is NULL in system_logs
 
-To keep a record that the message was seen, the program still writes a row
-to system_logs, but with no transaction_id because no transaction was created.
+Some SMS messages cannot become a transaction. For example, OTP messages just say "your password is 2476". There is no amount, no sender, and no receiver in those messages.
 
-In SQL:   transaction_id INT DEFAULT NULL
-In JSON:  "transaction_id": null
+When the program sees this kind of message, it does not insert anything into the transactions table. But we still want to know that we saw the message, so the program writes a row to system_logs anyway.
 
-The log_id itself is always a number — it is AUTO_INCREMENT and is never null.
-Only transaction_id can be null, when the log is for a skipped or failed message.
+Because no transaction was created, there is no transaction_id to link the log to. So transaction_id is set to NULL. The log_id itself is always a number because it uses AUTO_INCREMENT.
+
+In JSON this looks like:
+
+```json
+{
+  "log_id": 10,
+  "transaction_id": null,
+  "event_type": "parse_error",
+  "message": "SMS body did not match any known pattern",
+  "logged_at": "2024-05-05T15:00:00Z"
+}
+```
+
+This is why we set transaction_id INT DEFAULT NULL when we created the system_logs table.

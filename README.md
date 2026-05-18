@@ -1,5 +1,5 @@
-## TEAM NAME : The Stars
-# MoMo XML Analytics Dashboard
+## MoMo XML Analytics Dashboard
+# TEAM NAME : The Stars
 
 An enterprise-level fullstack application for processing, cleaning, categorizing, and visualizing MoMo SMS XML transaction data.
 
@@ -12,9 +12,6 @@ Design and develop an enterprise-level fullstack application where we process Mo
     1. Joseph Marube
     2. Philip Mbogho
     3. Davine Uwase
-
-## System Architecture
- [https://drive.google.com/file/d/1NggQeYrwl7KZc4BFyFpBZf0qz91oGh7r]
 
 ## System Architecture Diagram
 https://github.com/josephmarube/the_stars/blob/main/system_architecture.png 

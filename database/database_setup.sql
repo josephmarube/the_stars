@@ -7,35 +7,54 @@ COLLATE utf8mb4_unicode_ci;
 USE momo_sms;
 
 CREATE TABLE transaction_categories (
-    category_id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(100) NOT NULL UNIQUE,
-    description VARCHAR(255) DEFAULT NULL,
+    category_id INT AUTO_INCREMENT PRIMARY KEY
+        COMMENT 'Unique identifier for each transaction category',
+    name VARCHAR(100) NOT NULL UNIQUE
+        COMMENT 'Category label e.g. Send Money, Pay Bill, Airtime Purchase',
+    description VARCHAR(255) DEFAULT NULL
+        COMMENT 'Human-readable explanation of what this category covers',
     created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
-);
+        COMMENT 'Timestamp when this category record was created'
+) COMMENT = 'Lookup table classifying all MoMo transaction types';
+
 
 CREATE TABLE users (
-    user_id INT AUTO_INCREMENT PRIMARY KEY,
-    phone_number VARCHAR(20) NOT NULL UNIQUE,
-    full_name VARCHAR(150) NOT NULL,
-    is_merchant TINYINT(1) NOT NULL DEFAULT 0,
-    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    user_id INT AUTO_INCREMENT PRIMARY KEY
+        COMMENT 'Unique identifier for each registered MoMo user',
+    phone_number VARCHAR(20) NOT NULL UNIQUE
+        COMMENT 'E.164 formatted phone number e.g. +250781234567',
+    full_name VARCHAR(150) NOT NULL
+        COMMENT 'Full registered name of the account holder',
+    is_merchant TINYINT(1) NOT NULL DEFAULT 0
+        COMMENT '0 = personal account, 1 = merchant or agent business account',
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+        COMMENT 'Timestamp when this user account was registered',
 
-    CONSTRAINT chk_phone 
+    CONSTRAINT chk_phone
         CHECK (phone_number LIKE '+%'),
 
-    CONSTRAINT chk_is_merchant 
+    CONSTRAINT chk_is_merchant
         CHECK (is_merchant IN (0,1))
-);
+) COMMENT = 'All MoMo registered users including customers, merchants, and agents';
+
 
 CREATE TABLE transactions (
-    transaction_id INT AUTO_INCREMENT PRIMARY KEY,
-    ref_code VARCHAR(50) NOT NULL UNIQUE,
-    amount DECIMAL(15,2) NOT NULL,
-    fee DECIMAL(10,2) NOT NULL DEFAULT 0.00,
-    sender_id INT DEFAULT NULL,
-    category_id INT DEFAULT NULL,
-    status VARCHAR(20) NOT NULL DEFAULT 'completed',
-    transaction_at DATETIME NOT NULL,
+    transaction_id INT AUTO_INCREMENT PRIMARY KEY
+        COMMENT 'Unique identifier for each transaction record',
+    ref_code VARCHAR(50) NOT NULL UNIQUE
+        COMMENT 'System-generated 10-character alphanumeric MoMo reference code from SMS',
+    amount DECIMAL(15,2) NOT NULL
+        COMMENT 'Transaction amount in RWF — must be greater than zero',
+    fee DECIMAL(10,2) NOT NULL DEFAULT 0.00
+        COMMENT 'Transaction fee charged in RWF — zero for categories with no fee',
+    sender_id INT DEFAULT NULL
+        COMMENT 'FK to users — the account that initiated the transaction, NULL for bank deposits',
+    category_id INT DEFAULT NULL
+        COMMENT 'FK to transaction_categories — classifies the type of MoMo transaction',
+    status VARCHAR(20) NOT NULL DEFAULT 'completed'
+        COMMENT 'Transaction lifecycle state: pending | completed | failed',
+    transaction_at DATETIME NOT NULL
+        COMMENT 'Date and time the transaction occurred as parsed from the SMS',
 
     CONSTRAINT fk_transactions_sender
         FOREIGN KEY (sender_id)
@@ -57,13 +76,18 @@ CREATE TABLE transactions (
 
     CONSTRAINT chk_status
         CHECK (status IN ('pending', 'completed', 'failed'))
-);
+) COMMENT = 'Core MoMo transaction records parsed from SMS data';
+
 
 CREATE TABLE transaction_participants (
-    participant_id INT AUTO_INCREMENT PRIMARY KEY,
-    transaction_id INT NOT NULL,
-    user_id INT NOT NULL,
-    role VARCHAR(20) NOT NULL,
+    participant_id INT AUTO_INCREMENT PRIMARY KEY
+        COMMENT 'Surrogate primary key for each participation record',
+    transaction_id INT NOT NULL
+        COMMENT 'FK to transactions — the transaction this participant belongs to',
+    user_id INT NOT NULL
+        COMMENT 'FK to users — the user participating in this transaction',
+    role VARCHAR(20) NOT NULL
+        COMMENT 'Role of this user in the transaction: sender | receiver',
 
     CONSTRAINT uq_participant
         UNIQUE (transaction_id, user_id, role),
@@ -82,14 +106,20 @@ CREATE TABLE transaction_participants (
 
     CONSTRAINT chk_role
         CHECK (role IN ('sender', 'receiver'))
-);
+) COMMENT = 'Junction table resolving the M:N relationship between transactions and users';
+
 
 CREATE TABLE system_logs (
-    log_id INT AUTO_INCREMENT PRIMARY KEY,
-    transaction_id INT DEFAULT NULL,
-    event_type VARCHAR(50) NOT NULL,
-    message TEXT DEFAULT NULL,
-    logged_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    log_id INT AUTO_INCREMENT PRIMARY KEY
+        COMMENT 'Unique identifier for each log entry',
+    transaction_id INT DEFAULT NULL
+        COMMENT 'FK to transactions — NULL if error occurred before transaction was saved',
+    event_type VARCHAR(50) NOT NULL
+        COMMENT 'Event class: parse_success | parse_error | load_success | load_error | duplicate | validation_error',
+    message TEXT DEFAULT NULL
+        COMMENT 'Detailed log message describing the event or error',
+    logged_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+        COMMENT 'Timestamp when this log event was recorded by the ETL pipeline',
 
     CONSTRAINT fk_logs_transaction
         FOREIGN KEY (transaction_id)
@@ -108,7 +138,7 @@ CREATE TABLE system_logs (
                 'validation_error'
             )
         )
-);
+) COMMENT = 'ETL audit trail recording all SMS data processing events';
 
 CREATE INDEX idx_transactions_date
 ON transactions(transaction_at);

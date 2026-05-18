@@ -45,23 +45,23 @@ WHERE transaction_id = 13;
 - DECIMAL(15,2) → JSON number (10000.00)
 - NULL values → JSON null
 
-## Transaction categories discovered from XML analysis
+## Transaction categories in database_setup.sql
 
-The XML file contains 1,691 SMS messages with 7 distinct transaction types.
-Each maps to one row in the `transaction_categories` table:
+The SQL defines 6 categories. Each maps to a specific SMS body pattern from the XML:
 
-| category_id | name                | XML body pattern            | Count in XML |
-|-------------|---------------------|-----------------------------|--------------|
-| 1           | Send Money          | `*165*S*X RWF transferred…` | 585          |
-| 2           | Payment             | `TxId: XXXXX. Your payment…`| 660          |
-| 3           | Airtime             | `*162*TxId:XXXXX*S*…`       | 53           |
-| 4           | Bank Deposit        | `*113*R*A bank deposit…`    | 248          |
-| 5           | Receive Money       | `You have received X RWF…`  | 63           |
-| 6           | Merchant Payment    | `*164*S*Y'ello, A transaction…` | 36       |
-| 7           | Withdrawal          | `You Abebe… withdrawn X RWF via agent…` | 3 |
+| category_id | name               | XML body pattern                        | Count in XML |
+|-------------|--------------------|-----------------------------------------|--------------|
+| 1           | Incoming Money     | `You have received X RWF from NAME…`    | 63           |
+| 2           | Payment to Code    | `TxId: XXXXX. Your payment of X RWF…`  | 660          |
+| 3           | Transfer to Mobile | `*165*S*X RWF transferred to NAME…`    | 585          |
+| 4           | Bank Deposit       | `*113*R*A bank deposit of X RWF…`      | 248          |
+| 5           | Airtime Purchase   | `*162*TxId:XXXXX*S*Your payment…`      | 53           |
+| 6           | Agent Withdrawal   | `You NAME… withdrawn X RWF via agent…` | 3            |
 
-**Note:** Categories 6 (Merchant Payment) and 7 (Withdrawal) were identified
-from the XML analysis and must be added to `database_setup.sql`.
+Note: The XML also contains 36 merchant debit messages (`*164*S*`) and
+8 OTP messages. OTP messages produce a parse_error log with transaction_id NULL.
+The *164*S* messages can be categorised under Payment to Code if a
+Merchant Payment category is added in a future sprint.
 
 ## Unparseable messages — dead-letter handling
 

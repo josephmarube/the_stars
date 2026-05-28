@@ -3,3 +3,4 @@ __pycache__/
 .env
 data/raw/
 data/db.sqlite3
+data/raw/*.xml

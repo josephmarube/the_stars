@@ -1,0 +1,213 @@
+{
+  "complex_transaction": {
+    "transaction_id": 3,
+    "ref_code": "H5C2L9F7YD",
+    "amount": 10000.00,
+    "fee": 100.00,
+    "status": "completed",
+    "transaction_at": "2024-05-03T17:30:10Z",
+
+    "category": {
+      "category_id": 3,
+      "name": "Transfer to Mobile",
+      "description": "Peer to peer RWF transfer sent to another mobile number"
+    },
+
+    "sender": {
+      "user_id": 1,
+      "full_name": "Alice Mukamana",
+      "phone_number": "+250780000001",
+      "is_merchant": false
+    },
+
+    "participants": [
+      {
+        "participant_id": 5,
+        "role": "sender",
+        "user": {
+          "user_id": 1,
+          "full_name": "Alice Mukamana",
+          "phone_number": "+250780000001"
+        }
+      },
+      {
+        "participant_id": 6,
+        "role": "receiver",
+        "user": {
+          "user_id": 3,
+          "full_name": "Grace Uwimana",
+          "phone_number": "+250780000003"
+        }
+      }
+    ],
+
+    "system_logs": [
+      {
+        "log_id": 4,
+        "event_type": "parse_success",
+        "message": "H5C2L9F7YD | transfer_to_mobile | 10000 RWF + 100 fee | +250780000001 -> +250780000003",
+        "logged_at": "2024-05-03T17:30:10Z"
+      }
+    ]
+  },
+
+  "complex_transaction_agent_withdrawal": {
+    "transaction_id": 6,
+    "ref_code": "Z9P1Y4C8HQ",
+    "amount": 15000.00,
+    "fee": 200.00,
+    "status": "completed",
+    "transaction_at": "2024-05-05T12:22:08Z",
+
+    "category": {
+      "category_id": 6,
+      "name": "Agent Withdrawal",
+      "description": "Cash withdrawn from MoMo wallet at a registered agent"
+    },
+
+    "sender": {
+      "user_id": 1,
+      "full_name": "Alice Mukamana",
+      "phone_number": "+250780000001",
+      "is_merchant": false
+    },
+
+    "participants": [
+      {
+        "participant_id": 9,
+        "role": "sender",
+        "user": {
+          "user_id": 1,
+          "full_name": "Alice Mukamana",
+          "phone_number": "+250780000001"
+        }
+      },
+      {
+        "participant_id": 10,
+        "role": "receiver",
+        "user": {
+          "user_id": 5,
+          "full_name": "Kigali MoMo Agent",
+          "phone_number": "+250780000005"
+        }
+      }
+    ],
+
+"system_logs": [
+  {
+    "log_id": 12,
+    "event_type": "parse_success",
+    "message": "Z9P1Y4C8HQ | agent_withdrawal | 15000 RWF + 200 fee | +250780000001 -> +250780000005",
+    "logged_at": "2024-05-05T12:22:08Z"
+  }
+]
+
+  },
+
+  "complex_transaction_failed": {
+    "transaction_id": 7,
+    "ref_code": "D6F3R7V2KL",
+    "amount": 8000.00,
+    "fee": 100.00,
+    "status": "failed",
+    "transaction_at": "2024-05-05T14:10:55Z",
+
+    "category": {
+      "category_id": 3,
+      "name": "Transfer to Mobile",
+      "description": "Peer to peer RWF transfer sent to another mobile number"
+    },
+
+    "sender": {
+      "user_id": 1,
+      "full_name": "Alice Mukamana",
+      "phone_number": "+250780000001",
+      "is_merchant": false
+    },
+
+    "participants": [
+      {
+        "participant_id": 11,
+        "role": "sender",
+        "user": {
+          "user_id": 1,
+          "full_name": "Alice Mukamana",
+          "phone_number": "+250780000001"
+        }
+      },
+      {
+        "participant_id": 12,
+        "role": "receiver",
+        "user": {
+          "user_id": 4,
+          "full_name": "Jean Paul Habimana",
+          "phone_number": "+250780000004"
+        }
+      }
+    ],
+
+    "system_logs": [
+      {
+        "log_id": 8,
+        "event_type": "parse_success",
+        "message": "D6F3R7V2KL | transfer_to_mobile | 8000 RWF + 100 fee | +250780000001 -> +250780000004",
+        "logged_at": "2024-05-05T14:10:55Z"
+      },
+      {
+        "log_id": 9,
+        "event_type": "load_error",
+        "message": "D6F3R7V2KL status=failed | balance 5600 RWF insufficient for 8100 RWF debit",
+        "logged_at": "2024-05-05T14:10:56Z"
+      }
+    ]
+  },
+
+  "transaction_category": {
+    "category_id": 3,
+    "name": "Transfer to Mobile",
+    "description": "Peer to peer RWF transfer sent to another mobile number",
+    "created_at": "2024-05-03T00:00:00Z"
+  },
+
+  "user": {
+    "user_id": 1,
+    "phone_number": "+250780000001",
+    "full_name": "Alice Mukamana",
+    "is_merchant": false,
+    "created_at": "2024-05-01T00:00:00Z"
+  },
+
+  "transaction": {
+    "transaction_id": 3,
+    "ref_code": "H5C2L9F7YD",
+    "amount": 10000.00,
+    "fee": 100.00,
+    "sender_id": 1,
+    "category_id": 3,
+    "status": "completed",
+    "transaction_at": "2024-05-03T17:30:10Z"
+  },
+
+  "transaction_participant": {
+    "participant_id": 5,
+    "transaction_id": 3,
+    "user_id": 1,
+    "role": "sender"
+  },
+
+  "system_log": {
+    "log_id": 4,
+    "transaction_id": 3,
+    "event_type": "parse_success",
+    "message": "H5C2L9F7YD | transfer_to_mobile | 10000 RWF + 100 fee | +250780000001 -> +250780000003",
+    "logged_at": "2024-05-03T17:30:10Z"
+  },
+
+  "system_log_parse_error": {
+    "log_id": 10,
+    "transaction_id": null,
+    "event_type": "parse_error",
+    "message": "offset 4821 | regex match failed | body=\"*161*...\" unrecognised pattern",
+    "logged_at": "2024-05-05T15:00:00Z"
+  }
+}

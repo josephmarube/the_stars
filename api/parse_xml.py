@@ -17,10 +17,8 @@ def categorize(body: str) -> str:
         return "Transfer to Mobile"
     if body.startswith("*113*R*"):
         return "Bank Deposit"
-    if body.startswith("*162*") and "Airtime" in body:
-        return "Airtime Purchase"
-    if body.startswith("*162*") and "Cash Power" in body:
-        return "Airtime Purchase"
+    if body.startswith("*162*"):
+      return "Airtime Purchase"
     if body.startswith("*164*"):
         return "Unknown"
     if body.startswith("TxId:") and "Your payment of" in body:

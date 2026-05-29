@@ -1,16 +1,9 @@
-# AI Usage Log — The Stars
+# AI Usage Log 
 
-## Policy Summary
+## Assignment 1: Database Design And Implementation
 
-Permitted: grammar checking, syntax verification, researching best practices
-Prohibited: generating ERD designs, SQL schemas, business logic, 
-            writing technical explanations or reflections
+## Person 1 : Davine Uwase 
 
----
-
-## Person 1 — Davine Uwase (ERD + DDL + Indexes)
-
-**Claude**
 - Used to confirm correct MySQL FOREIGN KEY syntax and understand 
   the difference between ON DELETE SET NULL and ON DELETE CASCADE.
   The decision on which tables used SET NULL versus CASCADE was made 
@@ -31,16 +24,12 @@ Prohibited: generating ERD designs, SQL schemas, business logic,
   All entities, attributes, and relationships were designed 
   independently before formatting.
 
-**Grammarly**
 - Used for a grammar and spelling check on erd_rationale.md. 
   All technical content and reasoning in that document was written 
   independently.
 
----
+## Person 2 : Joseph Marube 
 
-## Person 2 — Joseph Marube (INSERT data + CRUD + Screenshots)
-
-**Claude**
 - Used to confirm that NULL is valid MySQL syntax for an optional 
   foreign key column in an INSERT statement. 
   The decision that bank deposit transactions carry no human sender 
@@ -51,11 +40,8 @@ Prohibited: generating ERD designs, SQL schemas, business logic,
   file from WSL: sudo mysql < database/database_setup.sql. 
   No schema or logic decisions were involved.
 
----
+## Person 3 : Philip Mbogho 
 
-## Person 3 — Philip Mbogho (JSON Schemas + Mapping + README)
-
-**Claude**
 - Used to understand what a JSON schema looks like for a database 
   entity and how SQL columns map to JSON keys. The MoMo-specific 
   field names and which entities to document were decided 
@@ -87,6 +73,49 @@ Prohibited: generating ERD designs, SQL schemas, business logic,
   section of a README. The section was written independently 
   using our specific folder names, table names, and project details.
 
-**Grammarly**
 - Used for a spelling and grammar check on sql_to_json_mapping.md 
   and README.md. All technical content was written independently.
+
+  ## Assignment Two: Building And Securing a REST API
+
+  ## Person 1 : Joseph Marube
+
+  ## Person 2 : Philip Mbogho
+
+- Used Claude to diagnose ModuleNotFoundError (running from wrong directory).
+
+- Used Claude to inspect *162* XML body patterns. Fix to catch Bundles and 
+  ONAFRIQ variants decided independently after reading the actual XML output.
+
+- Category logic, ID assignment strategy, and skip policy for OTPs decided 
+  independently
+  
+- Used Claude to identify syntax error (missing triple quote) and three 
+  indentation errors introduced during manual editing.
+
+- TX_INDEX design decision (dict over list for O(1) lookup) made 
+  independently, connecting to the team's DSA analysis.
+/health endpoint structure decided independently.
+
+- Used Claude to confirm dict.pop() syntax for safe deletion without KeyError.
+
+
+  ## Person 3 : Davine Uwase 
+  
+  ## Claude
+- Used to clarify the difference between linear search O(n) and dictionary lookup O(1) in Python dictionaries.
+The actual implementation, timing measurements, and comparison logic in dsa/search_compare.py were written and tested independently. 
+
+- Used to research why dictionary lookups are generally faster than linear search and to understand possible alternatives such as binary search trees and hash-based structures.
+The final reflection and analysis were written independently based on the measured results from the project dataset.
+
+- Used to review the required structure for REST API documentation and understand standard formatting for endpoint descriptions, request examples, response examples, and error codes.
+All endpoint documentation in docs/api_docs.md was written independently using the team’s actual API implementation and test results.
+
+- Used to refine wording and improve clarity in explanations related to Basic Authentication limitations, JWT, and OAuth2 for the project report.
+The final explanations and recommendations were reviewed and edited independently before submission.
+
+## Grammarly
+
+- Used for grammar and spelling checks in api_docs.md and the written DSA reflection sections.
+All technical explanations and documentation content were written independently.

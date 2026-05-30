@@ -8,7 +8,7 @@ An enterprise-level fullstack application for processing, cleaning, categorizing
     2. Philip Mbogho
     3. Davine Uwase
 
-**Scrum Board:** https://trello.com/b/fxmhWKpf/momo-xml-analytics 
+**Scrum Board:** https://github.com/users/duwase7/projects/1
 
 ## PROJECT DESCRIPTION:
 

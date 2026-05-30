@@ -79,6 +79,22 @@
   ## Assignment Two: Building And Securing a REST API
 
   ## Person 1 : Joseph Marube
+  - Used to verify the correct method signature for BaseHTTPRequestHandler
+and confirm which methods to override for handling HTTP verbs in plain
+Python.
+
+- Used to verify the correct Python syntax for decoding a base64 string:
+base64.b64decode(encoded).decode("utf-8") and confirm that the split(":", 1)
+approach correctly handles passwords containing colons.
+
+- Used to confirm that a correct 401 Unauthorized response requires a
+WWW-Authenticate header with the realm parameter. 
+
+- Used to verify correct usage of json.dumps() with the indent parameter
+and json.loads() for parsing request bodies.
+
+- Used to research OAuth2 grant types and confirm that the authorization
+code flow is distinct from the client credentials flow.
 
   ## Person 2 : Philip Mbogho
 
